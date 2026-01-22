@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SourD Calculator</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#121416">
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="app-title">SourD Calculator</div>
+
+    <div class="module">
+        <div class="mod-header">
+            <span class="mod-label">Configuration</span>
+            <div class="controls">
+                <button id="install-btn" class="install-btn" hidden>INSTALL APP</button>
+                <button class="reset-btn" onclick="resetAll()" title="Reset to Defaults">
+                    <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                </button>
+                <button class="tune-btn" onclick="toggleExpand('adv-panel', this)">Advanced</button>
+            </div>
+        </div>
+        
+        <div class="input-row">
+            <div class="label"><span>Starter Amount</span></div>
+            <div class="stepper">
+                <button class="btn" onpointerdown="hold('start', -10)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                <div class="val-box"><input type="number" id="in-start" class="val" value="150" oninput="calc()"><span class="unit">g</span></div>
+                <button class="btn" onpointerdown="hold('start', 10)" onpointerup="stop()" onpointerleave="stop()">+</button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="input-row" style="margin:0">
+                <div class="label"><span>Loaf Weight</span></div>
+                <div class="stepper">
+                    <button class="btn" onpointerdown="hold('weight', -50)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                    <div class="val-box"><input type="number" id="in-weight" class="val val-wide" value="1000" oninput="calc()"><span class="unit">g</span></div>
+                    <button class="btn" onpointerdown="hold('weight', 50)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                </div>
+            </div>
+            <div class="input-row" style="margin:0">
+                <div class="label"><span>Hydration</span></div>
+                <div class="stepper">
+                    <button class="btn" onpointerdown="hold('hyd', -1)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                    <div class="val-box"><input type="number" id="in-hyd" class="val" value="70" oninput="calc()"><span class="unit">%</span></div>
+                    <button class="btn" onpointerdown="hold('hyd', 1)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="expand-wrap" id="adv-panel">
+            <div class="expand-inner grid">
+                <div class="input-row" style="margin:0">
+                    <div class="label"><span>Salt</span></div>
+                    <div class="stepper">
+                        <button class="btn" onpointerdown="hold('salt', -0.1)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                        <div class="val-box"><input type="number" id="in-salt" class="val" value="2.0" oninput="calc()"><span class="unit">%</span></div>
+                        <button class="btn" onpointerdown="hold('salt', 0.1)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                    </div>
+                </div>
+                
+                <div class="input-row" style="margin:0">
+                    <div class="label"><span>2nd Flour</span></div>
+                    <div class="stepper">
+                        <button class="btn" onpointerdown="hold('sec', -5)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                        <div class="val-box"><input type="number" id="in-sec" class="val" value="0" oninput="calc()"><span class="unit">%</span></div>
+                        <button class="btn" onpointerdown="hold('sec', 5)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                    </div>
+                </div>
+
+                <div class="input-row" style="margin:0; grid-column: span 2; margin-top: 14px;">
+                    <div class="label"><span>Starter Hydration</span></div>
+                    <div class="stepper">
+                        <button class="btn" onpointerdown="hold('st-hyd', -5)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                        <div class="val-box"><input type="number" id="in-st-hyd" class="val" value="100" oninput="calc()"><span class="unit">%</span></div>
+                        <button class="btn" onpointerdown="hold('st-hyd', 5)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="module" style="padding:0; border:none; background:transparent;">
+        <div class="mod-label" style="margin:0 0 10px 10px; border:none; padding:0;">Ingredients</div>
+        <div class="stack">
+            <div class="seg s-flour-1">
+                <span class="seg-name">Flour</span>
+                <span class="seg-amt" id="out-flour-1">520g</span>
+            </div>
+            <div class="seg s-flour-2 hidden" id="row-sec">
+                <span class="seg-name">Secondary Flour</span>
+                <span class="seg-amt" id="out-flour-2">0g</span>
+            </div>
+            <div class="seg s-water">
+                <span class="seg-name">Water</span>
+                <span class="seg-amt" id="out-water">345g</span>
+            </div>
+            <div class="seg s-start">
+                <span class="seg-name">Starter</span>
+                <span class="seg-amt" id="out-start">150g</span>
+            </div>
+            <div class="seg s-salt">
+                <span class="seg-name" style="font-size: 9px;">Salt</span>
+                <span class="seg-amt" style="font-size: 16px;" id="out-salt">11g</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="mod-header">
+            <span class="mod-label">Baker's Stats</span>
+            <button class="help-btn" onclick="toggleExpand('help-panel', this)">?</button>
+        </div>
+
+        <div class="expand-wrap" id="help-panel">
+            <div class="expand-inner">
+                <div class="help-box">
+                    <div class="help-title">PFF% (Pre-Fermented Flour) <span class="help-rec">Rec: 8-20%</span></div>
+                    <div class="help-desc">
+                        How much of your total flour is already fermented. <br>
+                        <span class="help-hilite">Higher (15%+)</span> = Faster, sourer, stronger flavor.<br>
+                        <span class="help-hilite">Lower (8-12%)</span> = Slower, milder, more structure.
+                    </div>
+                </div>
+                <div class="help-box">
+                    <div class="help-title">Inoculation % <span class="help-rec">Rec: 20-30%</span></div>
+                    <div class="help-desc">
+                        Ratio of starter to flour.<br>
+                        <span class="help-hilite">Higher (25%+)</span> = Fast rise, shorter bulk ferment.<br>
+                        <span class="help-hilite">Lower (15-20%)</span> = Slow rise, overnight bulk ferment.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="stat"><span class="s-lab">Inoculation</span><span class="s-num" id="stat-inoc">0%</span></div>
+            <div class="stat"><span class="s-lab">PFF</span><span class="s-num" id="stat-pff">0%</span></div>
+            <div class="stat"><span class="s-lab">Total Flour</span><span class="s-num" id="stat-tf">0g</span></div>
+            <div class="stat"><span class="s-lab">Total Water</span><span class="s-num" id="stat-tw">0g</span></div>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="footer-msg">I Hope You Find This Application Helpful.</div>
+        <div class="actions">
+            <a href="https://ko-fi.com/nosleap" class="action-btn btn-supp" target="_blank">Support Free Tools</a>
+            <a href="https://github.com/nosleap/SourD_Calculator/issues" class="action-btn btn-feed" target="_blank">Feedback (GitHub)</a>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            // MANUAL FORCE: ?v=5.0 triggers immediate fetch of the new SW file
+            navigator.serviceWorker.register('./sw.js?v=5.1').then(reg => {
+                
+                if (reg.waiting) {
+                    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        }
+                    });
+                });
+            });
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

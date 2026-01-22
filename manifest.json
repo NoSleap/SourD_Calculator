@@ -1,0 +1,17 @@
+{
+  "name": "SourD Calculator",
+  "short_name": "SourD",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121416",
+  "theme_color": "#121416",
+  "description": "Easy Sourdough Calculation for bakers.",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
