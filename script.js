@@ -2,27 +2,32 @@ let holdTimer = null;
 let loopTimer = null;
 let currentSpeed = 400;
 let historyTrap = false;
+let toastTimer = null;
 
+// Updated Banneton List with Median Calculation ( (Min+Max)/2 )
 const bannetonData = {
     'round': [
-        { size: '5"', weight: 250, min: 200, max: 325 },
-        { size: '6"', weight: 400, min: 300, max: 475 },
-        { size: '7"', weight: 500, min: 450, max: 600 },
-        { size: '8"', weight: 750, min: 600, max: 850 },
-        { size: '9"', weight: 1000, min: 850, max: 1100 },
-        { size: '10"', weight: 1250, min: 1100, max: 1500 }
+        { size: '5"', weight: 125, min: 100, max: 150 },
+        { size: '6"', weight: 175, min: 150, max: 200 },
+        { size: '7"', weight: 350, min: 300, max: 400 },
+        { size: '8"', weight: 750, min: 700, max: 800 },
+        { size: '9"', weight: 850, min: 800, max: 900 },
+        { size: '10"', weight: 950, min: 900, max: 1000 },
+        { size: '11"', weight: 1100, min: 1000, max: 1200 },
+        { size: '12"', weight: 1350, min: 1200, max: 1500 }
     ],
     'oval': [
-        { size: '6"', weight: 250, min: 200, max: 325 },
-        { size: '8"', weight: 500, min: 400, max: 600 },
-        { size: '9"', weight: 650, min: 550, max: 750 },
-        { size: '10"', weight: 750, min: 700, max: 900 },
-        { size: '11"', weight: 900, min: 800, max: 1050 },
-        { size: '12"', weight: 1000, min: 900, max: 1200 }
+        { size: '7.5"', weight: 400, min: 350, max: 450 },
+        { size: '9"', weight: 550, min: 450, max: 650 },
+        { size: '10"', weight: 725, min: 650, max: 800 },
+        { size: '11"', weight: 825, min: 750, max: 900 },
+        { size: '12"', weight: 950, min: 800, max: 1100 },
+        { size: '14"', weight: 1250, min: 1100, max: 1400 }
     ]
 };
+
 let currentShape = 'round';
-let currentSizeIndex = 4;
+let currentSizeIndex = 4; // Default 9" Round
 let limitMin = 0;
 let limitMax = 10000;
 
@@ -62,6 +67,16 @@ function gravityLoop(id, amount) {
 
 function stop() { clearTimeout(holdTimer); clearTimeout(loopTimer); }
 
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        t.classList.remove('show');
+    }, 2000);
+}
+
 function adj(id, amount) {
     const el = document.getElementById('in-' + id);
     let currentVal = parseFloat(el.value);
@@ -70,9 +85,17 @@ function adj(id, amount) {
     let val = parseFloat((currentVal + amount).toFixed(1));
     if(val < 0) val = 0;
 
+    // Apply Banneton Limits and Toast
     if (id === 'weight' && document.getElementById('banneton-toggle').checked) {
-        if (val < limitMin) val = limitMin;
-        if (val > limitMax) val = limitMax;
+        if (val < limitMin) {
+            val = limitMin;
+            // Only show toast if user actually hit the wall
+            if (currentVal <= limitMin) showToast("Min limit! Change banneton size down.");
+        }
+        if (val > limitMax) {
+            val = limitMax;
+            if (currentVal >= limitMax) showToast("Max limit! Change banneton size up.");
+        }
     }
 
     el.value = val;
@@ -98,7 +121,7 @@ function toggleBannetonMode() {
 
 function setShape(shape) {
     currentShape = shape;
-    currentSizeIndex = 0; // Reset to smallest of new shape (safest)
+    currentSizeIndex = 0; // Reset to smallest
     
     // UI Update
     document.getElementById('shape-round').classList.toggle('active', shape === 'round');
