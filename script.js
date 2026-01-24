@@ -1,6 +1,7 @@
 let holdTimer = null;
 let loopTimer = null;
 let currentSpeed = 400;
+let historyTrap = false;
 
 function toggleExpand(id, btn) {
     document.getElementById(id).classList.toggle('open');
@@ -96,12 +97,8 @@ function calc() {
     document.getElementById('stat-pff').innerText = pff.toFixed(1) + '%';
     document.getElementById('stat-tf').innerText = Math.round(totalFlour) + 'g';
     document.getElementById('stat-tw').innerText = Math.round(totalWater) + 'g';
-}
 
-// Initial calculation
-calc();
-
-window.addEventListener('beforeunload', (e) => {
+    // History Trap for Back Button
     const isClean = 
         document.getElementById('in-weight').value == "1000" &&
         document.getElementById('in-hyd').value == "70" &&
@@ -110,9 +107,32 @@ window.addEventListener('beforeunload', (e) => {
         document.getElementById('in-sec').value == "0" &&
         document.getElementById('in-st-hyd').value == "100";
 
-    if (!isClean) {
+    if (!isClean && !historyTrap) {
+        history.pushState({ dirty: true }, null, "");
+        historyTrap = true;
+    }
+}
+
+// Initial calculation
+calc();
+
+// Refresh / Close Tab Protection
+window.addEventListener('beforeunload', (e) => {
+    if (historyTrap) {
         e.preventDefault();
         e.returnValue = '';
+    }
+});
+
+// Back Button Protection
+window.addEventListener('popstate', (e) => {
+    if (historyTrap) {
+        if (confirm("Discard changes?")) {
+            historyTrap = false; // Allow exit
+            history.back();
+        } else {
+            history.pushState({ dirty: true }, null, ""); // Restore trap
+        }
     }
 });
 
