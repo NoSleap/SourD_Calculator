@@ -2,7 +2,7 @@
  * Service Worker for SourD Calculator
  * Handles offline caching and PWA installation.
  */
-const CACHE_VERSION = 'sourd-v2.0'; 
+const CACHE_VERSION = 'sourd-v2.20'; 
 
 const assets = [
   './',

@@ -101,13 +101,13 @@
 
                     <div id="banneton-controls" class="hidden">
                         <div class="shape-selector">
-                            <button class="shape-btn active" id="shape-round" onclick="setShape('round')">
+                            <button class="shape-btn active" id="shape-boule" onclick="setShape('boule')">
                                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                                <span>Round</span>
+                                <span>Boule</span>
                             </button>
-                            <button class="shape-btn" id="shape-oval" onclick="setShape('oval')">
+                            <button class="shape-btn" id="shape-batard" onclick="setShape('batard')">
                                 <svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                                <span>Oval</span>
+                                <span>Bâtard</span>
                             </button>
                         </div>
                         
@@ -196,8 +196,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            // MANUAL FORCE: ?v=2.0 triggers immediate fetch of the new SW file
-            navigator.serviceWorker.register('./sw.js?v=2.0').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=2.20').then(reg => {
                 
                 if (reg.waiting) {
                     reg.waiting.postMessage({ type: 'SKIP_WAITING' });

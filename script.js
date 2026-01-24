@@ -4,30 +4,30 @@ let currentSpeed = 400;
 let historyTrap = false;
 let toastTimer = null;
 
-// Updated Banneton List with Median Calculation ( (Min+Max)/2 )
+// Updated Banneton List with specific Min/Max/Default
 const bannetonData = {
-    'round': [
-        { size: '5"', weight: 125, min: 100, max: 150 },
-        { size: '6"', weight: 175, min: 150, max: 200 },
-        { size: '7"', weight: 350, min: 300, max: 400 },
-        { size: '8"', weight: 750, min: 700, max: 800 },
-        { size: '9"', weight: 850, min: 800, max: 900 },
-        { size: '10"', weight: 950, min: 900, max: 1000 },
-        { size: '11"', weight: 1100, min: 1000, max: 1200 },
-        { size: '12"', weight: 1350, min: 1200, max: 1500 }
+    'boule': [
+        { size: '5"', weight: 300, min: 150, max: 350 },
+        { size: '6"', weight: 400, min: 200, max: 500 },
+        { size: '7"', weight: 600, min: 450, max: 725 },
+        { size: '8"', weight: 750, min: 700, max: 1000 },
+        { size: '9"', weight: 900, min: 800, max: 1100 },
+        { size: '10"', weight: 1100, min: 950, max: 1300 },
+        { size: '11"', weight: 1300, min: 1000, max: 1500 },
+        { size: '12"', weight: 1500, min: 1100, max: 1800 }
     ],
-    'oval': [
-        { size: '7.5"', weight: 400, min: 350, max: 450 },
-        { size: '9"', weight: 550, min: 450, max: 650 },
-        { size: '10"', weight: 725, min: 650, max: 800 },
-        { size: '11"', weight: 825, min: 750, max: 900 },
-        { size: '12"', weight: 950, min: 800, max: 1100 },
-        { size: '14"', weight: 1250, min: 1100, max: 1400 }
+    'batard': [
+        { size: '7"', weight: 700, min: 350, max: 800 },
+        { size: '9"', weight: 900, min: 600, max: 900 },
+        { size: '10"', weight: 1000, min: 750, max: 1100 },
+        { size: '11"', weight: 1100, min: 800, max: 1200 },
+        { size: '12"', weight: 1200, min: 900, max: 1300 },
+        { size: '14"', weight: 1400, min: 1100, max: 1400 }
     ]
 };
 
-let currentShape = 'round';
-let currentSizeIndex = 4; // Default 9" Round
+let currentShape = 'boule';
+let currentSizeIndex = 4; // Default 9" Boule
 let limitMin = 0;
 let limitMax = 10000;
 
@@ -89,7 +89,6 @@ function adj(id, amount) {
     if (id === 'weight' && document.getElementById('banneton-toggle').checked) {
         if (val < limitMin) {
             val = limitMin;
-            // Only show toast if user actually hit the wall
             if (currentVal <= limitMin) showToast("Min limit! Change banneton size down.");
         }
         if (val > limitMax) {
@@ -111,6 +110,15 @@ function toggleBannetonMode() {
     if (isOn) {
         controls.classList.remove('hidden');
         linkIcon.classList.remove('hidden');
+        
+        // Force Default: 9" Boule (Index 4)
+        currentShape = 'boule';
+        currentSizeIndex = 4;
+        
+        // Update Shape UI
+        document.getElementById('shape-boule').classList.add('active');
+        document.getElementById('shape-batard').classList.remove('active');
+        
         renderSizes(); // Initialize visuals
         setSize(currentSizeIndex); // Apply constraint immediately
     } else {
@@ -124,8 +132,8 @@ function setShape(shape) {
     currentSizeIndex = 0; // Reset to smallest
     
     // UI Update
-    document.getElementById('shape-round').classList.toggle('active', shape === 'round');
-    document.getElementById('shape-oval').classList.toggle('active', shape === 'oval');
+    document.getElementById('shape-boule').classList.toggle('active', shape === 'boule');
+    document.getElementById('shape-batard').classList.toggle('active', shape === 'batard');
     
     renderSizes();
     setSize(0); // Auto-select first size
@@ -138,6 +146,7 @@ function renderSizes() {
     const sizes = bannetonData[currentShape];
     sizes.forEach((item, index) => {
         const btn = document.createElement('div');
+        // 'boule' or 'batard' is added as a class for CSS styling
         btn.className = `size-pill ${currentShape}` + (index === currentSizeIndex ? ' active' : '');
         btn.innerText = item.size;
         btn.onclick = () => setSize(index);
@@ -254,18 +263,13 @@ window.addEventListener('popstate', (e) => {
     }
 });
 
-/* INSTALL APP BUTTON */
-
-
 // PWA Install Logic
 let deferredPrompt;
 const installBtn = document.getElementById('install-btn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent Chrome 67+ from automatically showing the prompt
     e.preventDefault();
     deferredPrompt = e;
-    // Show the install button
     installBtn.hidden = false;
 });
 
@@ -273,7 +277,6 @@ installBtn.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to install prompt: ${outcome}`);
     deferredPrompt = null;
     installBtn.hidden = true;
 });
