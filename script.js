@@ -101,7 +101,23 @@ function calc() {
 // Initial calculation
 calc();
 
+window.addEventListener('beforeunload', (e) => {
+    const isClean = 
+        document.getElementById('in-weight').value == "1000" &&
+        document.getElementById('in-hyd').value == "70" &&
+        document.getElementById('in-salt').value == "2.0" &&
+        document.getElementById('in-start').value == "150" &&
+        document.getElementById('in-sec').value == "0" &&
+        document.getElementById('in-st-hyd').value == "100";
+
+    if (!isClean) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
 /* INSTALL APP BUTTON */
+
 
 // PWA Install Logic
 let deferredPrompt;
