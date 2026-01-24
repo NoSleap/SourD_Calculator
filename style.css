@@ -73,7 +73,10 @@ body {
 }
 
 .input-row { margin-bottom: 14px; }
-.label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+.label { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+
+.link-icon { width: 12px; height: 12px; fill: var(--accent); margin-left: 4px; opacity: 1; transition: opacity 0.3s; }
+.link-icon.hidden { opacity: 0; }
 
 .stepper { 
     display: grid; 
@@ -176,14 +179,11 @@ body {
 
 /* INSTALL APP BUTTON */
 .install-btn {
-    /* Style matched to btn-supp */
     background: rgba(234, 179, 8, 0.1); 
     color: var(--highlight); 
     border: 1px solid var(--highlight);
-    
-    /* Layout */
     border-radius: 6px;
-    padding: 6px 16px; /* Wider padding as requested */
+    padding: 6px 16px;
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
@@ -192,8 +192,43 @@ body {
     margin-right: 4px;
     letter-spacing: 0.5px;
 }
-.install-btn:active { 
-    transform: scale(0.95); 
-    background: rgba(234, 179, 8, 0.2);
-}
+.install-btn:active { transform: scale(0.95); background: rgba(234, 179, 8, 0.2); }
 .install-btn[hidden] { display: none; }
+
+/* BANNETON MODE */
+.toggle-switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border); transition: .4s; border-radius: 20px;
+}
+.slider:before {
+    position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
+    background-color: var(--text-dim); transition: .4s; border-radius: 50%;
+}
+input:checked + .slider { background-color: rgba(143, 179, 166, 0.2); border: 1px solid var(--accent); }
+input:checked + .slider:before { transform: translateX(14px); background-color: var(--accent); }
+
+.hidden { display: none !important; }
+
+.shape-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.shape-btn {
+    background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px; cursor: pointer; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all 0.2s;
+}
+.shape-btn svg { width: 24px; height: 24px; opacity: 0.5; }
+.shape-btn span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.shape-btn.active { background: rgba(143, 179, 166, 0.1); border-color: var(--accent); color: var(--accent); }
+.shape-btn.active svg { opacity: 1; }
+
+.size-carousel {
+    display: flex; overflow-x: auto; gap: 8px; padding-bottom: 4px; scrollbar-width: none;
+}
+.size-carousel::-webkit-scrollbar { display: none; }
+.size-pill {
+    flex: 0 0 auto; background: var(--panel); border: 1px solid var(--border); color: var(--text-dim);
+    padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s;
+}
+.size-pill.active { background: var(--accent); color: #121416; border-color: var(--accent); }

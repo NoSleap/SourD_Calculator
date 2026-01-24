@@ -41,7 +41,10 @@
 
         <div class="grid">
             <div class="input-row" style="margin:0">
-                <div class="label"><span>Loaf Weight</span></div>
+                <div class="label">
+                    <span>Loaf Weight</span>
+                    <svg id="weight-link-icon" class="link-icon hidden" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                </div>
                 <div class="stepper">
                     <button class="btn" onpointerdown="hold('weight', -50)" onpointerup="stop()" onpointerleave="stop()">−</button>
                     <div class="val-box"><input type="number" id="in-weight" class="val val-wide" value="1000" oninput="calc()"><span class="unit">g</span></div>
@@ -86,7 +89,33 @@
                         <button class="btn" onpointerdown="hold('st-hyd', 5)" onpointerup="stop()" onpointerleave="stop()">+</button>
                     </div>
                 </div>
-            </div>
+
+                <div class="banneton-ui" style="grid-column: span 2; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span class="label" style="margin:0; color: var(--accent);">Banneton Mode</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="banneton-toggle" onchange="toggleBannetonMode()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div id="banneton-controls" class="hidden">
+                        <div class="shape-selector">
+                            <button class="shape-btn active" id="shape-round" onclick="setShape('round')">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                                <span>Round</span>
+                            </button>
+                            <button class="shape-btn" id="shape-oval" onclick="setShape('oval')">
+                                <svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                                <span>Oval</span>
+                            </button>
+                        </div>
+                        
+                        <div class="size-carousel" id="size-carousel">
+                            </div>
+                    </div>
+                </div>
+                </div>
         </div>
     </div>
 
@@ -166,7 +195,7 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             // MANUAL FORCE: ?v=5.0 triggers immediate fetch of the new SW file
-            navigator.serviceWorker.register('./sw.js?v=5.3').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=5.4').then(reg => {
                 
                 if (reg.waiting) {
                     reg.waiting.postMessage({ type: 'SKIP_WAITING' });

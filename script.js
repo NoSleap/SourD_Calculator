@@ -3,6 +3,22 @@ let loopTimer = null;
 let currentSpeed = 400;
 let historyTrap = false;
 
+// Banneton Configuration
+const bannetonData = {
+    'round': [
+        { size: '7"', weight: 500 },
+        { size: '8"', weight: 750 },
+        { size: '9"', weight: 1000 }
+    ],
+    'oval': [
+        { size: '8"', weight: 500 },
+        { size: '10"', weight: 750 },
+        { size: '12"', weight: 1000 }
+    ]
+};
+let currentShape = 'round';
+let currentSizeIndex = 2; // Default to largest Round (9" -> 1000g)
+
 function toggleExpand(id, btn) {
     document.getElementById(id).classList.toggle('open');
     btn.classList.toggle('active');
@@ -16,6 +32,11 @@ function resetAll() {
         document.getElementById('in-salt').value = 2.0;
         document.getElementById('in-sec').value = 0;
         document.getElementById('in-st-hyd').value = 100;
+        
+        // Reset Banneton Mode
+        document.getElementById('banneton-toggle').checked = false;
+        toggleBannetonMode();
+        
         calc();
     }
 }
@@ -42,6 +63,67 @@ function adj(id, amount) {
     let val = parseFloat((currentVal + amount).toFixed(1));
     if(val < 0) val = 0;
     el.value = val;
+    calc();
+}
+
+// BANNETON MODE FUNCTIONS
+function toggleBannetonMode() {
+    const isOn = document.getElementById('banneton-toggle').checked;
+    const controls = document.getElementById('banneton-controls');
+    const linkIcon = document.getElementById('weight-link-icon');
+    
+    if (isOn) {
+        controls.classList.remove('hidden');
+        linkIcon.classList.remove('hidden');
+        renderSizes(); // Initialize visuals
+        setSize(currentSizeIndex); // Apply constraint immediately
+    } else {
+        controls.classList.add('hidden');
+        linkIcon.classList.add('hidden');
+    }
+}
+
+function setShape(shape) {
+    currentShape = shape;
+    currentSizeIndex = 0; // Reset to smallest of new shape (safest)
+    
+    // UI Update
+    document.getElementById('shape-round').classList.toggle('active', shape === 'round');
+    document.getElementById('shape-oval').classList.toggle('active', shape === 'oval');
+    
+    renderSizes();
+    setSize(0); // Auto-select first size
+}
+
+function renderSizes() {
+    const container = document.getElementById('size-carousel');
+    container.innerHTML = '';
+    
+    const sizes = bannetonData[currentShape];
+    sizes.forEach((item, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'size-pill' + (index === currentSizeIndex ? ' active' : '');
+        btn.innerText = item.size;
+        btn.onclick = () => setSize(index);
+        container.appendChild(btn);
+    });
+}
+
+function setSize(index) {
+    currentSizeIndex = index;
+    
+    // Update Active Pill
+    const pills = document.querySelectorAll('.size-pill');
+    pills.forEach((p, i) => {
+        if(i === index) p.classList.add('active');
+        else p.classList.remove('active');
+    });
+
+    // Update Main Input (Visual Linking)
+    const weight = bannetonData[currentShape][index].weight;
+    document.getElementById('in-weight').value = weight;
+    
+    // Trigger Calc
     calc();
 }
 
