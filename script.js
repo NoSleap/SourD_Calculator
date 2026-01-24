@@ -3,21 +3,28 @@ let loopTimer = null;
 let currentSpeed = 400;
 let historyTrap = false;
 
-// Banneton Configuration
 const bannetonData = {
     'round': [
-        { size: '7"', weight: 500 },
-        { size: '8"', weight: 750 },
-        { size: '9"', weight: 1000 }
+        { size: '5"', weight: 250, min: 200, max: 325 },
+        { size: '6"', weight: 400, min: 300, max: 475 },
+        { size: '7"', weight: 500, min: 450, max: 600 },
+        { size: '8"', weight: 750, min: 600, max: 850 },
+        { size: '9"', weight: 1000, min: 850, max: 1100 },
+        { size: '10"', weight: 1250, min: 1100, max: 1500 }
     ],
     'oval': [
-        { size: '8"', weight: 500 },
-        { size: '10"', weight: 750 },
-        { size: '12"', weight: 1000 }
+        { size: '6"', weight: 250, min: 200, max: 325 },
+        { size: '8"', weight: 500, min: 400, max: 600 },
+        { size: '9"', weight: 650, min: 550, max: 750 },
+        { size: '10"', weight: 750, min: 700, max: 900 },
+        { size: '11"', weight: 900, min: 800, max: 1050 },
+        { size: '12"', weight: 1000, min: 900, max: 1200 }
     ]
 };
 let currentShape = 'round';
-let currentSizeIndex = 2; // Default to largest Round (9" -> 1000g)
+let currentSizeIndex = 4;
+let limitMin = 0;
+let limitMax = 10000;
 
 function toggleExpand(id, btn) {
     document.getElementById(id).classList.toggle('open');
@@ -62,6 +69,12 @@ function adj(id, amount) {
     
     let val = parseFloat((currentVal + amount).toFixed(1));
     if(val < 0) val = 0;
+
+    if (id === 'weight' && document.getElementById('banneton-toggle').checked) {
+        if (val < limitMin) val = limitMin;
+        if (val > limitMax) val = limitMax;
+    }
+
     el.value = val;
     calc();
 }
@@ -102,7 +115,7 @@ function renderSizes() {
     const sizes = bannetonData[currentShape];
     sizes.forEach((item, index) => {
         const btn = document.createElement('div');
-        btn.className = 'size-pill' + (index === currentSizeIndex ? ' active' : '');
+        btn.className = `size-pill ${currentShape}` + (index === currentSizeIndex ? ' active' : '');
         btn.innerText = item.size;
         btn.onclick = () => setSize(index);
         container.appendChild(btn);
@@ -111,19 +124,19 @@ function renderSizes() {
 
 function setSize(index) {
     currentSizeIndex = index;
+    const data = bannetonData[currentShape][index];
+
+    limitMin = data.min;
+    limitMax = data.max;
     
-    // Update Active Pill
     const pills = document.querySelectorAll('.size-pill');
     pills.forEach((p, i) => {
         if(i === index) p.classList.add('active');
         else p.classList.remove('active');
     });
 
-    // Update Main Input (Visual Linking)
-    const weight = bannetonData[currentShape][index].weight;
-    document.getElementById('in-weight').value = weight;
+    document.getElementById('in-weight').value = data.weight;
     
-    // Trigger Calc
     calc();
 }
 

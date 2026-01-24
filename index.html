@@ -195,7 +195,7 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             // MANUAL FORCE: ?v=5.0 triggers immediate fetch of the new SW file
-            navigator.serviceWorker.register('./sw.js?v=5.4').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=1.11').then(reg => {
                 
                 if (reg.waiting) {
                     reg.waiting.postMessage({ type: 'SKIP_WAITING' });
