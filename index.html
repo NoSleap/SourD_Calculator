@@ -220,7 +220,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=2.20').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=2.33').then(reg => {
                 
                 if (reg.waiting) {
                     reg.waiting.postMessage({ type: 'SKIP_WAITING' });
