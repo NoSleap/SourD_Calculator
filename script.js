@@ -48,6 +48,10 @@ function resetAll() {
         // Reset Banneton Mode
         document.getElementById('banneton-toggle').checked = false;
         toggleBannetonMode();
+
+        // Reset Inclusions Mode
+        document.getElementById('inclusions-toggle').checked = false;
+        toggleInclusionsMode();
         
         calc();
     }
@@ -98,6 +102,18 @@ function adj(id, amount) {
     }
 
     el.value = val;
+    calc();
+}
+
+// INCLUSIONS MODE FUNCTIONS
+function toggleInclusionsMode() {
+    const isOn = document.getElementById('inclusions-toggle').checked;
+    const controls = document.getElementById('inclusions-controls');
+    if (isOn) {
+        controls.classList.remove('hidden');
+    } else {
+        controls.classList.add('hidden');
+    }
     calc();
 }
 
@@ -205,6 +221,17 @@ function calc() {
     document.getElementById('out-water').innerText = Math.round(addWater) + 'g';
     document.getElementById('out-start').innerText = starterAmt + 'g';
     document.getElementById('out-salt').innerText = totalSalt.toFixed(1) + 'g';
+
+    // Inclusions
+    const incRow = document.getElementById('row-inc');
+    if (document.getElementById('inclusions-toggle').checked) {
+        const incPct = getVal('inc') / 100;
+        const incAmt = totalFlour * incPct;
+        incRow.classList.remove('hidden');
+        document.getElementById('out-inc').innerText = Math.round(incAmt) + 'g';
+    } else {
+        incRow.classList.add('hidden');
+    }
     
     const secRow = document.getElementById('row-sec');
     if (secPct > 0) {
