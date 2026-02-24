@@ -152,6 +152,7 @@ body {
 .s-water   { background: var(--c-water); color: #fff; }
 .s-start   { background: var(--c-start); color: #fff; }
 .s-salt    { background: var(--c-salt); color: #cbd5e1; padding: 12px 20px; border:none; }
+.s-inclusion { background: #3a3040; color: #c4aee0; padding: 12px 20px; border:none; }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
