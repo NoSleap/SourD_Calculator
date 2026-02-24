@@ -88,6 +88,7 @@ function adj(id, amount) {
     
     let val = parseFloat((currentVal + amount).toFixed(1));
     if(val < 0) val = 0;
+    if (id === 'st-hyd' && val > 100) val = 100;
 
     // Apply Banneton Limits and Toast
     if (id === 'weight' && document.getElementById('banneton-toggle').checked) {
