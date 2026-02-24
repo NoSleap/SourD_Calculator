@@ -90,6 +90,27 @@
                     </div>
                 </div>
 
+                <div class="inclusions-ui" style="grid-column: span 2; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span class="label" style="margin:0; color: var(--accent);">Inclusions</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="inclusions-toggle" onchange="toggleInclusionsMode()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div id="inclusions-controls" class="hidden">
+                        <div class="input-row" style="margin:0">
+                            <div class="label"><span>Inclusion Amount</span></div>
+                            <div class="stepper">
+                                <button class="btn" onpointerdown="hold('inc', -1)" onpointerup="stop()" onpointerleave="stop()">−</button>
+                                <div class="val-box"><input type="number" id="in-inc" class="val" value="10" oninput="calc()"><span class="unit">%</span></div>
+                                <button class="btn" onpointerdown="hold('inc', 1)" onpointerup="stop()" onpointerleave="stop()">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="banneton-ui" style="grid-column: span 2; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <span class="label" style="margin:0; color: var(--accent);">Banneton Mode</span>
@@ -141,6 +162,10 @@
             <div class="seg s-salt">
                 <span class="seg-name" style="font-size: 9px;">Salt</span>
                 <span class="seg-amt" style="font-size: 16px;" id="out-salt">11g</span>
+            </div>
+            <div class="seg s-inclusion hidden" id="row-inc">
+                <span class="seg-name" style="font-size: 9px;">Inclusions</span>
+                <span class="seg-amt" style="font-size: 16px;" id="out-inc">0g</span>
             </div>
         </div>
     </div>
