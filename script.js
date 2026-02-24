@@ -41,7 +41,7 @@ function resetAll() {
         document.getElementById('in-start').value = 150;
         document.getElementById('in-weight').value = 1000;
         document.getElementById('in-hyd').value = 70; 
-        document.getElementById('in-salt').value = 2.0;
+        document.getElementById('in-salt').value = 2.3;
         document.getElementById('in-sec').value = 0;
         document.getElementById('in-st-hyd').value = 100;
         
