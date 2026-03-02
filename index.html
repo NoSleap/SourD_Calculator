@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SourD Calculator</title>
     
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
@@ -15,7 +16,7 @@
 
 <div class="container">
     
-    <div class="app-title">SourD Calculator</div>
+    
 
     <div class="module">
         <div class="mod-header">
@@ -219,7 +220,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=2.52').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=2.53').then(reg => {
                 
                 if (reg.waiting) {
                     reg.waiting.postMessage({ type: 'SKIP_WAITING' });
